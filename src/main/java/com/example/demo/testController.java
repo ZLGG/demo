@@ -26,12 +26,13 @@ public class testController {
     @Autowired
     MappingsUtil mappingsUtil;
 
-    FileOutputStream fileOutputStream =null;
     DruidPooledConnection connection = null;
     PreparedStatement pstate = null;
 
     @RequestMapping("/index")
     public String byIndexName(String indexName) throws Exception{
+        FileOutputStream fileOutputStream = null;
+        fileOutputStream = new FileOutputStream("C:\\Users\\123\\Desktop\\Mappings.txt");
 
         indexName = "twcart_qa_trade";
         //获取连接
@@ -64,9 +65,12 @@ public class testController {
 
         }
         log.info("result:{}", JSON.toJSON(list));
-        writeMappings("{\n" +
+        /*writeMappings("{\n" +
                 "    \"mappings\": {\n" +
-                "      ");
+                "      ");*/
+        fileOutputStream.write(new String("{\n" +
+                "    \"mappings\": {\n" +
+                "      ").getBytes());
         for (Map map : list) {
             String parentSourceTable = null;
             String sourceDbName = map.get("source_db").toString().trim();
@@ -81,26 +85,33 @@ public class testController {
                 }
             }
             String mappings = mappingsUtil.createMappings(sourceDbName, sourceTable, parentSourceTable);
-            writeMappings(mappings);
+            //writeMappings(mappings);
+            fileOutputStream.write(mappings.getBytes());
             if (map != list.get(list.size() - 1)) {
-                writeMappings(",");
+                //writeMappings(",");
+                fileOutputStream.write(new String(",").getBytes());
             }
             if (pstate != null) {
                 pstate.close();
             }
 
         }
-        writeMappings("\n" +
+       /* writeMappings("\n" +
                 "   }\n" +
-                "}");
+                "}");*/
+       fileOutputStream.write(new String("\n" +
+               "   }\n" +
+               "}").getBytes());
         dbManger.closeConnection(connection,pstate);
 
         fileOutputStream.close();
 
-        return "hello,word";
+        return "success";
     }
     @RequestMapping("/table")
     public String bySourceTable(String table) throws Exception{
+        FileOutputStream fileOutputStream =null;
+        fileOutputStream = new FileOutputStream("C:\\Users\\123\\Desktop\\Mappings.txt");
         if (connection == null) {
             connection = dbManger.connection();
         }
@@ -127,10 +138,11 @@ public class testController {
             }
         }
         String mappings = mappingsUtil.createMappings(sourceDbName, sourceTable, parentSourceTable);
-        writeMappings(mappings);
+        //writeMappings(mappings);
+        fileOutputStream.write(mappings.getBytes());
         return "success";
     }
-    void writeMappings(String mappings){
+    /*void writeMappings(String mappings){
         try {
             if (fileOutputStream == null) {
                 fileOutputStream = new FileOutputStream("C:\\Users\\123\\Desktop\\Mappings.txt");
@@ -139,9 +151,7 @@ public class testController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-    }
+    }*/
     public Object packageObject(Object object) {
         if (object == null)
             return object;

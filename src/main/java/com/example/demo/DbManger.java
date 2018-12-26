@@ -4,6 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidPooledConnection;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -20,6 +21,8 @@ public class DbManger {
     PreparedStatement statement = null;
     DruidDataSource dataSource = null;
     DruidPooledConnection connection = null;
+    /*@Autowired
+    DruidDataSource druidDataSource;*/
     static HashMap<String, DruidDataSource> dataSourceHashMap = Maps.newHashMap();
     public  DruidPooledConnection connection() throws Exception{
         DruidDataSource druidDataSource = new DruidDataSource();
@@ -30,9 +33,9 @@ public class DbManger {
         druidDataSource.setInitialSize(20);
         druidDataSource.setMaxActive(20);
         druidDataSource.setRemoveAbandonedTimeout(1800);
-        DruidPooledConnection connection = druidDataSource.getConnection();
-        this.connection = connection;
-        return connection;
+        connection = druidDataSource.getConnection();
+        this.connection = druidDataSource.getConnection();
+        return this.connection;
     }
 
     public DruidDataSource getDataSource(String db_name) throws Exception{

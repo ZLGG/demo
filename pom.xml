@@ -25,11 +25,23 @@
     </properties>
 
     <dependencies>
+        <!--edas-->
+        <dependency>
+            <groupId>com.alibaba.edas.configcenter</groupId>
+            <artifactId>configcenter-client</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                    <groupId>org.apache.logging.log4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
